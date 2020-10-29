@@ -1,0 +1,105 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: enterprise-v1
+  labels:
+    app: enterprise
+    version: v1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: enterprise
+      version: v1
+  template:
+    metadata:
+      labels:
+        app: enterprise
+        version: v1
+    spec:
+      containers:
+      - name: enterprise
+        image: jamesmedice/enterprise
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 8080
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: enterprise-v2
+  labels:
+    app: enterprise
+    version: v2
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: enterprise
+      version: v2
+  template:
+    metadata:
+      labels:
+        app: enterprise
+        version: v2
+    spec:
+      containers:
+      - name: enterprise
+        image: jamesmedice/enterprise
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 8080
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: corporate-v1
+  labels:
+    app: corporate
+    version: v1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: corporate
+      version: v1
+  template:
+    metadata:
+      labels:
+        app: corporate
+        version: v1
+    spec:
+      containers:
+      - name: corporate
+        image: jamesmedice/corporate
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 8080
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: corporate-v2
+  labels:
+    app: corporate
+    version: v2
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: corporate
+      version: v2
+  template:
+    metadata:
+      labels:
+        app: corporate
+        version: v2
+    spec:
+      containers:
+      - name: corporate
+        image: jamesmedice/corporate
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 8080
+---

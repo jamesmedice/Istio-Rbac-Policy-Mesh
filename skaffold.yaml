@@ -1,0 +1,24 @@
+apiVersion: skaffold/v1alpha5
+kind: Config
+build:
+  artifacts:
+  - image: jamesmedice/corporate
+    context: istio-keycloak-corporate
+  - image: jamesmedice/enterprise
+    context: istio-keycloak-enterprise
+  tagPolicy:
+    gitCommit: {}
+deploy:
+  kubectl:
+    manifests:
+    - ./istio-keycloak/deployments.yaml
+    - ./istio-keycloak/services.yaml
+    - ./istio-keycloak/gateway.yaml
+    - ./istio-keycloak/virtualservices.yaml
+    - ./istio-keycloak/destinationRules.yaml
+    - ./istio-keycloak/authorization.yaml
+profiles:
+- name: james, dev, kubernetes, istio, virtualservice
+  build:
+    local:
+      push: false
