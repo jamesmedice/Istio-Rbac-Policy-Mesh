@@ -9,7 +9,9 @@ spec:
       istio: ingressgateway
   jwtRules:
   - issuer: "http://keycloak.keycloak-ns:8080/auth/realms/master"
-    jwksUri: "http://keycloak.keycloak-ns.svc.cluster.local/auth/realms/master/protocol/openid-connect/certs" 
+    jwksUri: "http://keycloak.keycloak-ns.svc.cluster.local:8080/auth/realms/master/protocol/openid-connect/certs"
+    forwardOriginalToken: true
+    outputPayloadToHeader: x-jwt-payload
 ---  
 apiVersion: security.istio.io/v1beta1
 kind: AuthorizationPolicy
@@ -25,7 +27,18 @@ spec:
   - from:
     - source:
        notRequestPrincipals: ["*"]
-    to:
-    - operation:
-        paths: ["/"]
 ---
+#apiVersion: security.istio.io/v1beta1
+#kind: RequestAuthentication
+#metadata:
+#  name: authenticationrequest
+#  namespace: istio-system
+#spec:
+#  selector:
+#    matchLabels:
+#      istio: ingressgateway
+#  jwtRules:
+#  - issuer: "http://localhost:30080/auth/realms/master"
+#    jwksUri: "http://localhost:30080//auth/realms/master/protocol/openid-connect/certs"
+#    forwardOriginalToken: true
+#    outputPayloadToHeader: x-jwt-payload

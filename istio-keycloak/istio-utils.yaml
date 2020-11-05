@@ -1,0 +1,114 @@
+curl --data "username=admin&password=admin&grant_type=password&client_id=admin-cli" http://keycloak.keycloak-ns:8080/auth/realms/master/protocol/openid-connect/token
+
+curl --data "username=admin&password=admin&grant_type=password&client_id=admin-cli" http://127.0.0.1:30080/auth/realms/master/protocol/openid-connect/token
+
+curl --data "username=admin&password=admin&grant_type=password&client_id=admin-cli" http://keycloak.keycloak-ns:8080/auth/realms/master/protocol/openid-connect/certs
+
+curl   http://keycloak.keycloak-ns.svc.cluster.local:8080/auth/realms/master/protocol/openid-connect/certs
+
+  
+---  
+ kubectl apply -f - <<EOF
+ apiVersion: security.istio.io/v1beta1
+kind: RequestAuthentication
+metadata:
+  name: authenticationrequest
+  namespace: default
+spec:
+  selector:
+    matchLabels:
+      app: enterprise
+  jwtRules:
+  - issuer: "http://keycloak.keycloak-ns:8080/auth/realms/master"
+    jwksUri: "http://keycloak.keycloak-ns.svc.cluster.local:8080/auth/realms/master/protocol/openid-connect/certs"
+	EOF
+---  
+ kubectl apply -f - <<EOF
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: authorizationpolicy
+  namespace: default
+spec:
+  selector:
+    matchLabels:
+      app: enterprise
+  action: ALLOW
+  rules:
+  - from:
+    - source:
+       requestPrincipals: ["http://keycloak.keycloak-ns:8080/auth/realms/master"] 
+	EOF
+--- 
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+  
+---  
+ kubectl apply -f - <<EOF
+apiVersion: security.istio.io/v1beta1
+kind: RequestAuthentication
+metadata:
+  name: authenticationrequest
+  namespace: istio-system
+spec:
+  selector:
+    matchLabels:
+      istio: ingressgateway
+  jwtRules:
+  - issuer: "testing@secure.istio.io"
+    jwksUri: "http://localhost:30080/auth/realms/master/protocol/openid-connect/certs"
+	EOF
+---  
+ kubectl apply -f - <<EOF
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: authorizationpolicy
+  namespace: istio-system
+spec:
+  selector:
+    matchLabels:
+      istio: ingressgateway
+  rules:
+  - from:
+    - source:
+       requestPrincipals: ["testing@secure.istio.io/testing@secure.istio.io"] 
+	EOF
+--- 
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+ kubectl apply -f - <<EOF
+apiVersion: "security.istio.io/v1beta1"
+kind: "RequestAuthentication"
+metadata:
+  name: "jwt"
+  namespace: default
+spec:
+  selector:
+    matchLabels:
+      app: enterprise
+  jwtRules:
+  - issuer: "testing@secure.istio.io"
+    jwksUri: "https://raw.githubusercontent.com/istio/istio/release-1.6/security/tools/jwt/samples/jwks.json"
+EOF
+
+ kubectl apply -f - <<EOF
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: require-jwt
+  namespace: default
+spec:
+  selector:
+    matchLabels:
+      app: enterprise
+  action: ALLOW
+  rules:
+  - from:
+    - source:
+       requestPrincipals: ["testing@secure.istio.io/testing@secure.istio.io"]
+EOF
+
+
