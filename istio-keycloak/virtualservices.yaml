@@ -6,7 +6,7 @@ spec:
   hosts:
     - '*'
   gateways:
-    - default/keycloak-gateway
+    - default/api-gateway
   http:
     - match:
         - uri:
@@ -38,7 +38,7 @@ spec:
   hosts:
     - '*'
   gateways:
-    - default/keycloak-gateway
+    - default/api-gateway
   http:
     - match:
         - uri:
