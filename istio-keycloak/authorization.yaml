@@ -28,20 +28,21 @@ spec:
     - source:
        notRequestPrincipals: ["*"]
 ---
-#apiVersion: security.istio.io/v1beta1
-#kind: RequestAuthentication
-#metadata:
-#  name: authenticationrequest
-#  namespace: istio-system
-#spec:
-#  selector:
-#    matchLabels:
-#      istio: ingressgateway
-#  jwtRules:
-#  - issuer: "http://localhost:30080/auth/realms/master"
-#    jwksUri: "http://localhost:30080//auth/realms/master/protocol/openid-connect/certs"
-#    forwardOriginalToken: true
-#    outputPayloadToHeader: x-jwt-payload
+#######################################################################################################
+########apiVersion: security.istio.io/v1beta1
+########kind: RequestAuthentication
+########metadata:
+########  name: authenticationrequest
+########  namespace: istio-system
+########spec:
+########  selector:
+########    matchLabels:
+########      istio: ingressgateway
+########  jwtRules:
+########  - issuer: "http://localhost:30080/auth/realms/master"
+########    jwksUri: "http://localhost:30080//auth/realms/master/protocol/openid-connect/certs"
+########    forwardOriginalToken: true
+########    outputPayloadToHeader: x-jwt-payload
 #######################################################################################################
 ########     kubectl apply -f - <<EOF
 ########    apiVersion: "security.istio.io/v1beta1"
@@ -74,4 +75,37 @@ spec:
 ########        - source:
 ########            notRequestPrincipals: ["*"]
 ########    EOF
+#######################################################################################################
+######## kubectl apply -f - <<EOF
+########apiVersion: "security.istio.io/v1beta1"
+########kind: "RequestAuthentication"
+########metadata:
+########  name: "authenticationrequest"
+########  namespace: istio-system
+########spec:
+########  selector:
+########    matchLabels:
+########      istio: ingressgateway
+########  jwtRules:
+########  - issuer: "https://dev-69mun6gq.us.auth0.com/"
+########    jwksUri: "https://dev-69mun6gq.us.auth0.com/.well-known/jwks.json"
+########EOF
+########
+######## kubectl apply -f - <<EOF
+########apiVersion: "security.istio.io/v1beta1"
+########kind: "AuthorizationPolicy"
+########metadata:
+########  name: "authorizationpolicy"
+########  namespace: istio-system
+########spec:
+########  selector:
+########    matchLabels:
+########      istio: ingressgateway
+########  action: DENY
+########  rules:
+########  - from:
+########    - source:
+########        notRequestPrincipals: ["*"]
+########EOF
+########
 #######################################################################################################
