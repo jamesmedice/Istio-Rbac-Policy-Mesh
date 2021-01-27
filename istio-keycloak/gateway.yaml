@@ -1,23 +1,22 @@
-apiVersion: networking.istio.io/v1alpha3    
-kind: Gateway                               
-metadata:                                   
+apiVersion: networking.istio.io/v1alpha3
+kind: Gateway
+metadata:
   name: api-gateway
-  namespace: default
-spec:                                       
-  selector:                                 
-    istio: ingressgateway                   
-  servers:                                  
-  - hosts:                                  
-    - '*'                                   
-    port:                                   
-      name: http                            
-      number: 80                            
+spec:
+  selector:
+    istio: ingressgateway
+  servers:
+  - port:
+      number: 80
+      name: http
       protocol: HTTP
+    hosts:
+    - "*"
 ###########################################
 #apiVersion: networking.istio.io/v1alpha3  
 #kind: Gateway                             
 #metadata:                                 
-#  name: oauth-gateway                     
+#  name: api-gateway                     
 #spec:                                     
 #  selector:                               
 #    istio: ingressgateway           
@@ -33,7 +32,7 @@ spec:
 #    hosts:
 #    - '*'
 #  - port:
-#      number: 31400
+#      number: 80
 #      name: http
 #      protocol: HTTP
 #    hosts:
@@ -45,7 +44,7 @@ spec:
 #apiVersion: networking.istio.io/v1alpha3
 #kind: Gateway
 #metadata:
-#  name: oauth-gateway
+#  name: api-gateway
 #spec:
 #  selector:
 #    istio: ingressgateway
@@ -74,7 +73,7 @@ spec:
 #apiVersion: networking.istio.io/v1alpha3    
 #kind: Gateway                               
 #metadata:                                   
-#  name: oauth-gateway                       
+#  name: api-gateway                       
 #spec:                                       
 #  selector:                                 
 #    istio: ingressgateway                   

@@ -8,9 +8,33 @@ spec:
   - name: enterprise-s1
     labels:
       version: v1
+    trafficPolicy:
+      connectionPool:
+        tcp:
+          maxConnections: 4
+        http:
+          http1MaxPendingRequests: 1
+          maxRequestsPerConnection: 1
+      outlierDetection:
+        consecutiveErrors: 4
+        interval: 1s
+        baseEjectionTime: 2s
+        maxEjectionPercent: 100
   - name: enterprise-s2
     labels:
       version: v2
+    trafficPolicy:
+      connectionPool:
+        tcp:
+          maxConnections: 4
+        http:
+          http1MaxPendingRequests: 1
+          maxRequestsPerConnection: 1
+      outlierDetection:
+        consecutiveErrors: 4
+        interval: 1s
+        baseEjectionTime: 2s
+        maxEjectionPercent: 100
 ---
 apiVersion: networking.istio.io/v1alpha3
 kind: DestinationRule
@@ -22,6 +46,30 @@ spec:
   - name: corporate-s1
     labels:
       version: v1
+    trafficPolicy:
+      connectionPool:
+        tcp:
+          maxConnections: 4
+        http:
+          http1MaxPendingRequests: 1
+          maxRequestsPerConnection: 1
+      outlierDetection:
+        consecutiveErrors: 4
+        interval: 1s
+        baseEjectionTime: 2s
+        maxEjectionPercent: 100
   - name: corporate-s2
     labels:
       version: v2
+    trafficPolicy:
+      connectionPool:
+        tcp:
+          maxConnections: 4
+        http:
+          http1MaxPendingRequests: 1
+          maxRequestsPerConnection: 1
+      outlierDetection:
+        consecutiveErrors: 4
+        interval: 1s
+        baseEjectionTime: 2s
+        maxEjectionPercent: 100

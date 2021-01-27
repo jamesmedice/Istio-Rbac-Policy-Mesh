@@ -1,15 +1,15 @@
-apiVersion: security.istio.io/v1beta1
-kind: RequestAuthentication
+apiVersion: "security.istio.io/v1beta1"
+kind: "RequestAuthentication"
 metadata:
-  name: authenticationrequest
+  name: "authenticationrequest"
   namespace: istio-system
 spec:
   selector:
     matchLabels:
       istio: ingressgateway
   jwtRules:
-  - issuer: "http://keycloak.keycloak-ns:8080/auth/realms/master"
-    jwksUri: "http://keycloak.keycloak-ns.svc.cluster.local:8080/auth/realms/master/protocol/openid-connect/certs"
+  - issuer: "https://dev-69mun6gq.us.auth0.com/"
+    jwksUri: "https://dev-69mun6gq.us.auth0.com/.well-known/jwks.json"
     forwardOriginalToken: true
     outputPayloadToHeader: x-jwt-payload
 ---  

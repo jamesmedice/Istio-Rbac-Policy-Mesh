@@ -15,6 +15,7 @@ spec:
         uri: /
       fault:
         delay:
+          percent: 100
           fixedDelay: 1s
       route:
         - destination:
@@ -29,6 +30,10 @@ spec:
               number: 8080
             subset: corporate-s2
           weight: 20
+      retries:
+        attempts: 2
+        perTryTimeout: 1s
+        retryOn: gateway-error,connect-failure,refused-stream
 ---
 apiVersion: networking.istio.io/v1alpha3
 kind: VirtualService
@@ -47,6 +52,7 @@ spec:
         uri: /
       fault:
         delay:
+          percent: 100
           fixedDelay: 1s
       route:
         - destination:
@@ -61,4 +67,8 @@ spec:
               number: 8080
             subset: enterprise-s2
           weight: 10
+      retries:
+        attempts: 2
+        perTryTimeout: 1s
+        retryOn: gateway-error,connect-failure,refused-stream
 ---
