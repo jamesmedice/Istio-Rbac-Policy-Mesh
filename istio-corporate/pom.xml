@@ -7,9 +7,9 @@
 
 	<parent>
 		<groupId>com.medici</groupId>
-		<artifactId>istio-keycloak-parent-service</artifactId>
+		<artifactId>istio-parent-service</artifactId>
 		<version>1.0.0</version>
-		<relativePath>../istio-keycloak-parent-service</relativePath>
+		<relativePath>../istio-parent-service</relativePath>
 	</parent>
 
 	<build>
