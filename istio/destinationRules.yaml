@@ -1,0 +1,30 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: DestinationRule
+metadata:
+  name: enterprise
+spec:
+  host: enterprise
+  subsets:
+  - name: enterprise-v1
+    labels:
+      version: v1
+  - name: enterprise-v2
+    labels:
+      version: v2
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: DestinationRule
+metadata:
+  name: corporate
+spec:
+  host: corporate
+  subsets:
+  - name: corporate-v1
+    labels:
+      version: v1
+  - name: corporate-v2
+    labels:
+      version: v2
+  - name: corporate-v3
+    labels:
+      version: v3

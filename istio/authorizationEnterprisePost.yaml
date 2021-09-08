@@ -1,0 +1,19 @@
+# [START istio_security_intro_manifests_authorization_policy_frontend]
+apiVersion: "security.istio.io/v1beta1"
+kind: "AuthorizationPolicy"
+metadata:
+  name: "enterprise-post-policy"
+  namespace: default
+spec:
+  selector:
+    matchLabels:
+      app: enterprise
+  action: DENY
+  rules:
+  - to:
+    - operation:
+        methods: ["POST"]
+    when:
+    - key: request.headers[postman2enter]
+      values: ["postman"]	  
+# [END istio_security_intro_manifests_authorization_policy_frontend]

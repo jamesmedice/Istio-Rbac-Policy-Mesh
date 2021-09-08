@@ -1,0 +1,94 @@
+DOCKER 
+
+docker build -t nginxserver .
+docker run -it --rm -d -p 8080:8080 -p 443:443 --name server nginxserver
+
+[11:57] Martínez Tenor, Angel
+    
+
+server {​​​​​​​​
+    listen       8080 default_server;
+    server_name  localhost;
+    return 301 https://$server_name$request_uri;
+    }​​​​​​​​
+ 
+server {​​​​​​​​
+ 
+    listen 443 ssl;
+    server_name localhost;
+ 
+    ssl_certificate     /etc/nginx/ssl/mysslkey.crt;
+    ssl_certificate_key /etc/nginx/ssl/mysslkey.key;
+ 
+    location / {​​​​​​​​
+        root   /usr/share/nginx/html;
+        index  index.html index.htm;
+    }​​​​​​​​
+ 
+}​​​​​​​​
+
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+C:\Program Files\Git\usr\bin\openssl req -x509 -nodes -days 365 -newkey rsa:2048  -keyout C:/Users/a73s/dev/Istio-KeyCloak/istio-keycloak/server.key -out C:/Users/a73s/dev/Istio-KeyCloak/istio-keycloak/server.crt -config C:/Users/a73s/dev/Istio-KeyCloak/istio-keycloak/req.cnf -sha256
+
+kubectl -n istio-system port-forward $(kubectl -n istio-system get pod -l app=grafana -o jsonpath='{.items[0].metadata.name}') 3000:3000 
+kubectl port-forward -n istio-system $(kubectl get pod -n istio-system -l app=jaeger -o jsonpath='{.items[0].metadata.name}') 16686:16686 
+ kubectl -n istio-system port-forward $(kubectl -n istio-system get pod -l app=prometheus -o jsonpath='{.items[0].metadata.name}') 9090:9090 
+kubectl port-forward -n istio-system $(kubectl get pod -n istio-system -l app=zipkin -o jsonpath='{.items[0].metadata.name}') 9411:9411 
+
+kubectl -n istio-system port-forward $(kubectl -n istio-system get pod -l app=servicegraph -o jsonpath='{.items[0].metadata.name}') 8088:8088 
+
+
+
+kubectl apply -f https://raw.githubusercontent.com/jetstack/cert-manager/release-0.7/deploy/manifests/00-crds.yaml
+
+kubectl create namespace cert-manager
+
+kubectl label namespace cert-manager certmanager.k8s.io/disable-validation=true
+
+helm repo add jetstack https://charts.jetstack.io && \
+helm repo update && \
+helm upgrade -i cert-manager \
+--namespace cert-manager \
+--version v0.7.0 \
+jetstack/cert-manager
+
+
+--- 
+kubectl apply -f - <<EOF
+apiVersion: certmanager.k8s.io/v1alpha1
+kind: Issuer
+metadata:
+  name: letsencrypt-prod
+  namespace: istio-system
+spec:
+  acme:
+    server: https://acme-v02.api.letsencrypt.org/directory
+    email: tiago.sllater@gmail.com
+    privateKeySecretRef:
+      name: letsencrypt-prod
+    solvers:
+    - http01:
+        ingress:
+          class: istio
+EOF
+
+
+kubectl apply -f - <<EOF
+apiVersion: certmanager.k8s.io/v1alpha1
+kind: Certificate
+metadata:
+  name: istio-gateway
+  namespace: istio-system
+spec:
+  secretName: istio-ingressgateway-certs
+  issuerRef:
+    name: letsencrypt-prod
+    kind: Issuer
+  dnsNames:
+  - '*'
+EOF
